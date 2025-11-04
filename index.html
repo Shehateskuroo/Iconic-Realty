@@ -6,86 +6,370 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-     <script src="script.js" defer></script>
+     <script src="./script.js" defer></script>
     <title>Document</title>
 </head>
 <body>
+
+
     <!--Header-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#"><img src="logo.png" alt="Logo" class="logo"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">For Sale</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">For Rent</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Contact Us</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg" id="mainNavbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg" alt="Logo" class="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!--Fliter-->
-    <div></div><i class="fa fa-filter" aria-hidden="true"></i>
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-md-3">
-                <h5>Search Properties</h5>
-                <form id="filterForm">
-                    <div class="mb-3">
-                        <label for="location" class="form-label">Location</label>
-                        <input type="text" class="form-control" id="location" placeholder="Enter location">
-                    </div>
-                    <div class="mb-3">
-                        <label for="priceRange" class="form-label">Price Range</label>
-                        <select class="form-select" id="priceRange">
-                            <option value="">Select Price Range</option>
-                            <option value="0-1000">$0 - $1,000</option>
-                            <option value="1000-3000">$1,000 - $3,000</option>
-                            <option value="3000-5000">$3,000 - $5,000</option>
-                            <option value="5000+">$5,000+</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="propertyType" class="form-label
-">Property Type</label>
-                        <select class="form-select" id="propertyType">
-                            <option value="">Select Property Type</option>
-                            <option value="apartment">Apartment</option>
-                            <option value="house">House</option>
-                            <option value="condo">Vacant Land</option>
-                            <option value="townhouse">Townhouse</option>
-                        </select>   
-                    
-</div>
-
-<button type="submit" class="btn btn-primary">Filter</button>
-                </form>
-            </div>
-            <div class="col-md-9">
-                <div class="row" id="propertyList">
-                    <!-- Property cards will be dynamically inserted here -->
-                </div>
-            </div>
+        <!-- 👇 Add 'ms-auto' to push links to the far right -->
+        <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link active" href="#">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">For Sale</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">For Rent</a></li>
+                <li class="nav-item"><a class="nav-link" href="./About Us.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+            </ul>
         </div>
     </div>
+</nav>
 
-    
+<!-- Hero Carousel -->
+<div id="houseCarousel" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators (the little dots) -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="2"></button>
+  </div>
+
+  <!-- Slides -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="./Houses/8 lux.jpg" class="d-block w-100" alt="Luxury Apartment">
+      <div class="carousel-caption">
+        <h3>Luxury Apartment</h3>
+        <p>Modern city living at its finest</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <img src="./Houses/JHB SUB HOUSE 2.jpg" class="d-block w-100" alt="Suburban Home">
+      <div class="carousel-caption">
+        <h3>Cozy Suburban Home</h3>
+        <p>Perfect for families and peace of mind</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <img src="./Houses/Llandudno-Beach-House-1.jpg" class="d-block w-100" alt="Beach Villa">
+      <div class="carousel-caption">
+        <h3>Beachside Villa</h3>
+        <p>Wake up to the sound of waves</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls (prev/next arrows) -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#houseCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#houseCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+<!-- Filter Section -->
+<!-- Property Filter Section -->
+<section id="property-filter">
+  <div class="container">
+    <form id="filterForm" class="filter-form">
+      <div class="filter-item">
+        <label for="location">Location</label>
+        <input type="text" id="location" placeholder="Enter location">
+      </div>
+
+      <div class="filter-item">
+        <label for="bedrooms">Bedrooms</label>
+        <select id="bedrooms">
+          <option value="">Any</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label for="bathrooms">Bathrooms</label>
+        <select id="bathrooms">
+          <option value="">Any</option>
+          <option value="1">1+</option>
+          <option value="2">2+</option>
+          <option value="3">3+</option>
+          <option value="4">4+</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label for="priceRange">Price Range</label>
+        <select id="priceRange">
+          <option value="">Any</option>
+          <option value="0-100000">0 - 100K</option>
+          <option value="100000-500000">100K - 500K</option>
+          <option value="500000-1000000">500K - 1M</option>
+          <option value="1000000+">1M+</option>
+        </select>
+      </div>
+
+      <div class="filter-item">
+        <label for="propertyType">Property Type</label>
+        <select id="propertyType">
+          <option value="">All</option>
+          <option value="apartment">Apartment</option>
+          <option value="house">House</option>
+          <option value="vacant-land">Vacant Land</option>
+          <option value="townhouse">Townhouse</option>
+          <option value="commercial">Commercial</option>
+        </select>
+      </div>
+
+<div class="filter-btn-container">
+  <button type="submit" class="filter-btn">Filter</button>
+  <button type="button" class="clear-btn" id="clearFilters">Clear</button>
+</div>
+    </form>
+  </div>
+</section>
+
+
+<!-- Info Cards Section -->
+<section id="about-cards" class="py-5">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Card 1 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/profile.png" alt="Profile Icon" class="card-icon">
+          <h5>About Iconic Reality</h5>
+          <p>Iconic Reality is a real estate firm based in Johannesburg, driven by Mr. Bright Epelle. We strive for excellence, integrity, and world-class service in all we do.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/support.png" alt="Services" class="card-icon">
+          <h5>Our Services</h5>
+          <p>We specialize in residential, sectional title, commercial, industrial, and agricultural properties, assisting both buyers and sellers to achieve their goals.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/targeting.png" alt="Vision Icon" class="card-icon">
+          <h5>Our Vision</h5>
+          <p>Founded with over 8 years of experience, Iconic Reality aims to be a leading real estate brand, offering rentals, luxury living, and top-tier property solutions for every client.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <!--House Cards-->
+<div class="cards" id="propertyList">
+
+  <h3>Our Properties</h3>
+  <!-- Property 1 -->
+  <div class="card" 
+       data-location="Johannesburg" 
+       data-bedrooms="2" 
+       data-bathrooms="2" 
+       data-price="850000" 
+       data-type="apartment">
+    <img src="./Houses/APAR JHB.jpg" alt="Property 1">
+    <div class="card-body">
+      <h5 class="card-title">Modern Apartment in City Center</h5>
+      <p class="card-text">
+        📍 <strong>Location:</strong> Johannesburg<br>
+        🛏️ 2 Beds &nbsp; | &nbsp; 🛁 2 Baths &nbsp; | &nbsp; 📐 1200 sqft
+      </p>
+      <strong><p class="card-text">R 850,000</p></strong> 
+      <a href="#" class="btn btn-primary">View Details</a>
+    </div>
+  </div>
+
+  <!-- Property 2 -->
+  <div class="card" 
+       data-location="Midrand" 
+       data-bedrooms="3" 
+       data-bathrooms="2" 
+       data-price="1200000" 
+       data-type="house">
+    <img src="./Houses/JHB SUB HOUSE.jpg" alt="Property 2">
+    <div class="card-body">
+      <h5 class="card-title">Cozy Suburban House</h5>
+      <p class="card-text">
+        📍 <strong>Location:</strong> Midrand<br>
+        🛏️ 3 Beds &nbsp; | &nbsp; 🛁 2 Baths &nbsp; | &nbsp; 📐 1800 sqft
+      </p>
+      <strong><p class="card-text">R 1,200,000</p></strong> 
+      <a href="#" class="btn btn-primary">View Details</a>
+    </div>
+  </div>
+
+  <!-- Property 3 -->
+  <div class="card" 
+       data-location="Cape Town" 
+       data-bedrooms="2" 
+       data-bathrooms="2" 
+       data-price="2500000" 
+       data-type="condo">
+    <img src="./Houses/346338146.jpg" alt="Property 3">
+    <div class="card-body">
+      <h5 class="card-title">Luxury Condo with Sea View</h5>
+      <p class="card-text">
+        📍 <strong>Location:</strong> Cape Town<br>
+        🛏️ 2 Beds &nbsp; | &nbsp; 🛁 2 Baths &nbsp; | &nbsp; 📐 1500 sqft
+      </p>
+      <strong><p class="card-text">R 2,500,000</p></strong> 
+      <a href="#" class="btn btn-primary">View Details</a>
+    </div>
+  </div>
+
+  <!-- Property 4 -->
+<div class="card" 
+     data-location="Sandton" 
+     data-bedrooms="4" 
+     data-bathrooms="3" 
+     data-price="3200000" 
+     data-type="house">
+  <img src="./Houses/sandton villa.jpg" alt="Property 4">
+  <div class="card-body">
+    <h5 class="card-title">Luxury Villa in Sandton</h5>
+    <p class="card-text">
+      📍 <strong>Location:</strong> Sandton<br>
+      🛏️ 4 Beds &nbsp; | &nbsp; 🛁 3 Baths &nbsp; | &nbsp; 📐 2500 sqft
+    </p>
+    <strong><p class="card-text">R 3,200,000</p></strong>
+    <a href="#" class="btn btn-primary">View Details</a>
+  </div>
+</div>
+
+<!-- Property 5 -->
+<div class="card" 
+     data-location="Rosebank" 
+     data-bedrooms="3" 
+     data-bathrooms="2" 
+     data-price="1800000" 
+     data-type="townhouse">
+  <img src="./Houses/Rosebank.jpg" alt="Property 5">
+  <div class="card-body">
+    <h5 class="card-title">Modern Townhouse in Rosebank</h5>
+    <p class="card-text">
+      📍 <strong>Location:</strong> Rosebank<br>
+      🛏️ 3 Beds &nbsp; | &nbsp; 🛁 2 Baths &nbsp; | &nbsp; 📐 1500 sqft
+    </p>
+    <strong><p class="card-text">R 1,800,000</p></strong>
+    <a href="#" class="btn btn-primary">View Details</a>
+  </div>
+</div>
+
+<!-- Property 6 -->
+<div class="card" 
+     data-location="Pretoria" 
+     data-bedrooms="2" 
+     data-bathrooms="1" 
+     data-price="950000" 
+     data-type="apartment">
+  <img src="./Houses/Apart PTA.jpg" alt="Property 6">
+  <div class="card-body">
+    <h5 class="card-title">Cozy Apartment in Pretoria</h5>
+    <p class="card-text">
+      📍 <strong>Location:</strong> Pretoria<br>
+      🛏️ 2 Beds &nbsp; | &nbsp; 🛁 1 Bath &nbsp; | &nbsp; 📐 1000 sqft
+    </p>
+    <strong><p class="card-text">R 950,000</p></strong>
+    <a href="#" class="btn btn-primary">View Details</a>
+  </div>
+</div>
+
+<!--Property 7-->
+<div class="card" 
+     data-location="Sandton" 
+     data-bedrooms="4" 
+     data-bathrooms="3" 
+     data-price="3200000" 
+     data-type="house">
+  <img src="./Houses/Sandton Fam.jpg" alt="Property 4">
+  <div class="card-body">
+    <h5 class="card-title">Spacious Sandton Family Home</h5>
+    <p class="card-text">
+      📍 <strong>Location:</strong> Sandton<br>
+      🛏️ 4 Beds &nbsp; | &nbsp; 🛁 3 Baths &nbsp; | &nbsp; 📐 2500 sqft
+    </p>
+    <strong><p class="card-text">R 3,200,000</p></strong> 
+    <a href="#" class="btn btn-primary">View Details</a>
+  </div>
+</div>
+
+<!-- More Properties Card -->
+<div class="card more-properties-card">
+  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+    <h5 class="card-title">More Properties</h5>
+    <p class="card-text">Looking for more options? Check out our listings for sale or rent!</p>
+    <div class="more-btns">
+      <a href="#" class="btn btn-sale">For Sale</a>
+      <a href="#" class="btn btn-rent">For Rent</a>
+    </div>
+  </div>
+</div>
+
+
+  <!-- No Results Message -->
+<div id="noResults" style="display: none; text-align: center; padding: 40px 0;">
+  <h4 style="color: #1A0C4B; font-weight: 700;">No results found 😕</h4>
+  <p style="color: #555;">Try adjusting your filters or searching another location.</p>
+</div>
+
+</div>
+
+
         
+<!-- Why Choose Us Section -->
+<section id="why-choose-us" class="py-5 text-white">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">Why Choose Us</h2>
+    <div class="row g-4 justify-content-center">
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/customer-review.png" alt="Experience Icon" class="why-icon mb-3">
+        <h5>Experience</h5>
+        <p>With years of industry experience, we know how to navigate the market and secure the best deals for our clients.</p>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/trust.png" alt="Trust Icon" class="why-icon mb-3">
+        <h5>Trusted</h5>
+        <p>Our clients trust us with their most valuable investments thanks to our integrity and transparency in every transaction.</p>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/customer-service.png" alt="Support Icon" class="why-icon mb-3">
+        <h5>Full Support</h5>
+        <p>From start to finish, we guide our clients through every step, making the process simple and stress-free.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
 
 
     <footer class="bg-light text-center text-lg-start mt-4">
