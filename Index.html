@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="script.js" defer></script>
+    <title>Document</title>
+</head>
+<body>
+    <!--Header-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#"><img src="logo.png" alt="Logo" class="logo"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">For Sale</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">For Rent</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About Us</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!--Fliter-->
+    <div></div><i class="fa fa-filter" aria-hidden="true"></i>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <h5>Search Properties</h5>
+                <form id="filterForm">
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" placeholder="Enter location">
+                    </div>
+                    <div class="mb-3">
+                        <label for="priceRange" class="form-label">Price Range</label>
+                        <select class="form-select" id="priceRange">
+                            <option value="">Select Price Range</option>
+                            <option value="0-1000">$0 - $1,000</option>
+                            <option value="1000-3000">$1,000 - $3,000</option>
+                            <option value="3000-5000">$3,000 - $5,000</option>
+                            <option value="5000+">$5,000+</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="propertyType" class="form-label
+">Property Type</label>
+                        <select class="form-select" id="propertyType">
+                            <option value="">Select Property Type</option>
+                            <option value="apartment">Apartment</option>
+                            <option value="house">House</option>
+                            <option value="condo">Vacant Land</option>
+                            <option value="townhouse">Townhouse</option>
+                        </select>   
+                    
+</div>
+
+<button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+            </div>
+            <div class="col-md-9">
+                <div class="row" id="propertyList">
+                    <!-- Property cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+        
+
+
+    <footer class="bg-light text-center text-lg-start mt-4">
+        <div class="text-center p-3">
+            © 2025 Real Estate Website
+        </div>  
+</body>
+</html>
