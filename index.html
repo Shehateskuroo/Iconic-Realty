@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Iconic Realty - Premium properties for sale and rent in Johannesburg. Browse luxury apartments, houses, townhouses, and commercial properties. Find your dream home today.">
+    <meta name="keywords" content="properties for sale, properties for rent, Johannesburg real estate, luxury properties, apartments, houses, townhouses, commercial properties, Iconic Realty">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" id="og-url" content="">
+    <meta property="og:title" content="Iconic Realty - Premium Properties in Johannesburg | Buy & Rent">
+    <meta property="og:description" content="Browse premium properties for sale and rent in Johannesburg. Luxury apartments, houses, and commercial properties available through Iconic Realty.">
+    <meta property="og:image" content="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" id="twitter-url" content="">
+    <meta property="twitter:title" content="Iconic Realty - Premium Properties in Johannesburg | Buy & Rent">
+    <meta property="twitter:description" content="Browse premium properties for sale and rent in Johannesburg. Luxury apartments, houses, and commercial properties available through Iconic Realty.">
+    <meta property="twitter:image" content="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg">
+    <link rel="icon" type="image/jpeg" sizes="16x16" href="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg">
+    <link rel="apple-touch-icon" href="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg">
+    <link rel="stylesheet" href="styles.css?v=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Supabase UMD (used by script.js when SUPABASE_URL / SUPABASE_ANON_KEY are set) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js/dist/umd/supabase.js"></script>
+    <!-- Set dynamic Open Graph URLs (works on Netlify, GitHub Pages, and custom domains) -->
+    <script>
+      (function() {
+        const currentUrl = window.location.href;
+        const ogUrl = document.getElementById('og-url');
+        const twitterUrl = document.getElementById('twitter-url');
+        if (ogUrl) ogUrl.setAttribute('content', currentUrl);
+        if (twitterUrl) twitterUrl.setAttribute('content', currentUrl);
+      })();
+    </script>
+    <!-- Load local Supabase config (create `config.js` from `config.example.js` and add to .gitignore) -->
+    <script src="./config.js" defer></script>
+    <script src="./script.js" defer></script>
+    <title>Iconic Realty - Premium Properties in Johannesburg | Buy & Rent</title>
+</head>
+<body>
+
+
+    <!--Header-->
+<nav class="navbar navbar-expand-lg" id="mainNavbar">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="index.html">
+            <img src="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg" alt="Logo" class="logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- 👇 Add 'ms-auto' to push links to the far right -->
+        <div class="collapse navbar-collapse ms-auto" id="navbarNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="for-sale.html">For Sale</a></li>
+                <li class="nav-item"><a class="nav-link" href="for-rent.html">For Rent</a></li>
+                <li class="nav-item"><a class="nav-link" href="about-us.html">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="contact.html">Contact Us</a></li>
+            </ul>
+      <button class="btn btn-outline-light ms-lg-3 upload-btn" id="uploadPropertyBtn" type="button">
+        Upload Property
+      </button>
+        </div>
+    </div>
+</nav>
+
+<!-- Hero Carousel -->
+<div id="houseCarousel" class="carousel slide" data-bs-ride="carousel">
+
+  <!-- Indicators (the little dots) -->
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="0" class="active"></button>
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="1"></button>
+    <button type="button" data-bs-target="#houseCarousel" data-bs-slide-to="2"></button>
+  </div>
+
+  <!-- Slides -->
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="./Houses/8 lux.jpg" class="d-block w-100" alt="Luxury Apartment">
+      <div class="carousel-caption">
+        <h3>Luxury Apartment</h3>
+        <p>Modern city living at its finest</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <img src="./Houses/JHB SUB HOUSE 2.jpg" class="d-block w-100" alt="Suburban Home">
+      <div class="carousel-caption">
+        <h3>Cozy Suburban Home</h3>
+        <p>Perfect for families and peace of mind</p>
+      </div>
+    </div>
+
+    <div class="carousel-item">
+      <img src="./Houses/Llandudno-Beach-House-1.jpg" class="d-block w-100" alt="Beach Villa">
+      <div class="carousel-caption">
+        <h3>Beachside Villa</h3>
+        <p>Wake up to the sound of waves</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Controls (prev/next arrows) -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#houseCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#houseCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+
+<!-- Filter Section -->
+<section id="property-filter">
+  <div class="container">
+    <div class="filter-header">
+      <h2 class="filter-title">Search Properties</h2>
+      <p class="filter-subtitle">Filter by your preferences</p>
+    </div>
+    
+    <form id="filterForm" class="filter-form">
+      <div class="filter-grid">
+        <div class="filter-item">
+          <label for="listingType">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+            </svg>
+            Listing Type
+          </label>
+          <select id="listingType">
+            <option value="">All</option>
+            <option value="sale">For Sale</option>
+            <option value="rent">For Rent</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label for="location">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            Location
+          </label>
+          <input type="text" id="location" placeholder="Enter location">
+        </div>
+
+        <div class="filter-item">
+          <label for="bedrooms">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M7 14c1.66 0 3-1.34 3-3H4c0 1.66 1.34 3 3 3zm0-4c1.66 0 3 1.34 3 3H4c0-1.66 1.34-3 3-3zm8 0c1.66 0 3 1.34 3 3h-6c0-1.66 1.34-3 3-3zm0 4c1.66 0 3-1.34 3-3h-6c0 1.66 1.34 3 3 3zm-8-8c1.66 0 3-1.34 3-3H4c0 1.66 1.34 3 3 3zm8 0c1.66 0 3 1.34 3 3h-6c0-1.66 1.34-3 3-3z"/>
+            </svg>
+            Bedrooms
+          </label>
+          <select id="bedrooms">
+            <option value="">Any</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label for="bathrooms">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M9 2C7.89 2 7 2.89 7 4v1H6c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2h-1V4c0-1.11-.89-2-2-2H9zm0 2h6v1H9V4zM6 7h12v14H6V7z"/>
+            </svg>
+            Bathrooms
+          </label>
+          <select id="bathrooms">
+            <option value="">Any</option>
+            <option value="1">1+</option>
+            <option value="2">2+</option>
+            <option value="3">3+</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label for="priceRange" id="priceRangeLabel">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/>
+            </svg>
+            Price Range
+          </label>
+          <select id="priceRange">
+            <option value="">Any</option>
+            <option value="0-100000" class="price-sale">0 - 100K</option>
+            <option value="100000-500000" class="price-sale">100K - 500K</option>
+            <option value="500000-1000000" class="price-sale">500K - 1M</option>
+            <option value="1000000+" class="price-sale">1M+</option>
+            <option value="0-5000" class="price-rent" style="display: none;">0 - 5K p/m</option>
+            <option value="5000-10000" class="price-rent" style="display: none;">5K - 10K p/m</option>
+            <option value="10000-20000" class="price-rent" style="display: none;">10K - 20K p/m</option>
+            <option value="20000+" class="price-rent" style="display: none;">20K+ p/m</option>
+          </select>
+        </div>
+
+        <div class="filter-item">
+          <label for="filterPropertyType">
+            <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            Property Type
+          </label>
+          <select id="filterPropertyType">
+            <option value="">All</option>
+            <option value="apartment">Apartment</option>
+            <option value="house">House</option>
+            <option value="vacant-land">Vacant Land</option>
+            <option value="townhouse">Townhouse</option>
+            <option value="commercial">Commercial</option>
+          </select>
+        </div>
+        
+      </div>
+
+        <div class="filter-actions">
+        <button type="button" class="see-more-toggle" id="seeMoreBtn">
+          <span class="see-more-text">See More</span>
+          <span class="see-less-text" style="display: none;">See Less</span>
+          <svg class="see-more-icon" viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+            <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
+          </svg>
+        </button>
+        <button type="submit" class="filter-btn">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          Filter
+        </button>
+        <button type="button" class="clear-btn" id="clearFilters">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+          Clear
+        </button>
+      </div>
+
+      <div id="advancedFilters" class="advanced-filters">
+        <div class="advanced-filters-grid">
+          <div class="filter-item">
+            <label for="size">
+              <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+              </svg>
+              Size (m²)
+            </label>
+            <input type="number" id="size" placeholder="Min size" min="0">
+          </div>
+
+          <div class="filter-item">
+            <label for="parking">
+              <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/>
+              </svg>
+              Parking Spaces
+            </label>
+            <input type="number" id="parking" placeholder="Number of spaces" min="0">
+          </div>
+
+          <div class="filter-item">
+            <label for="yearBuilt">
+              <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M9 11H7v9h2v-9zm4 0h-2v9h2v-9zm4 0h-2v9h2v-9zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/>
+              </svg>
+              Year Built
+            </label>
+            <input type="number" id="yearBuilt" placeholder="Year" min="1800" max="2025">
+          </div>
+
+          <div class="filter-item">
+            <label for="furnished">
+              <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                <path d="M20 6h-2.18c.11-.31.18-.65.18-1a2.996 2.996 0 0 0-5.5-1.65l-.5.67-.5-.68C10.96 2.54 10 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/>
+              </svg>
+              Furnished
+            </label>
+            <select id="furnished">
+              <option value="">Any</option>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+
+<!-- Info Cards Section -->
+<section id="about-cards" class="py-5">
+  <div class="container">
+    <div class="row g-4">
+
+      <!-- Card 1 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/profile.png" alt="Profile Icon" class="card-icon">
+          <h5>About Iconic Reality</h5>
+          <p>Iconic Reality is a real estate firm based in Johannesburg, driven by Mr. Bright Epelle. We strive for excellence, integrity, and world-class service in all we do.</p>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/support.png" alt="Services" class="card-icon">
+          <h5>Our Services</h5>
+          <p>We specialize in residential, sectional title, commercial, industrial, and agricultural properties, assisting both buyers and sellers to achieve their goals.</p>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-md-4">
+        <div class="info-card p-4 h-100 text-center">
+            <img src="./Icons/Profile/targeting.png" alt="Vision Icon" class="card-icon">
+          <h5>Our Vision</h5>
+          <p>Founded with over 8 years of experience, Iconic Reality aims to be a leading real estate brand, offering rentals, luxury living, and top-tier property solutions for every client.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+    <!--House Cards-->
+<div class="cards" id="propertyList">
+
+  <h3>Our Properties</h3>
+  <!-- placeholder properties removed: dynamic listings will populate here -->
+
+<div id="dynamicFeaturedAnchor" class="w-100"></div>
+
+<!-- More Properties Card -->
+<div class="card more-properties-card">
+  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
+    <h5 class="card-title">More Properties</h5>
+    <p class="card-text">Looking for more options? Check out our listings for sale or rent!</p>
+    <div class="more-btns">
+      <a href="for-sale.html" class="btn btn-sale">For Sale</a>
+      <a href="for-rent.html" class="btn btn-rent">For Rent</a>
+    </div>
+  </div>
+</div>
+
+
+  <!-- No Results Message -->
+<div id="noResults" style="display: none; text-align: center; padding: 40px 0;">
+  <h4 style="color: #1A0C4B; font-weight: 700;">No properties found matching your search 😕</h4>
+  <p style="color: #555; margin-bottom: 20px;">Try adjusting your filters or searching another location.</p>
+  <p style="color: #555; font-weight: 500; margin-bottom: 15px;">For more properties please check:</p>
+  <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+    <a href="for-sale.html" class="btn btn-sale" style="text-decoration: none;">Browse For Sale</a>
+    <a href="for-rent.html" class="btn btn-rent" style="text-decoration: none;">Browse For Rent</a>
+  </div>
+</div>
+
+</div>
+
+
+        
+<!-- Why Choose Us Section -->
+<section id="why-choose-us" class="py-5 text-white">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">Why Choose Us</h2>
+    <div class="row g-4 justify-content-center">
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/customer-review.png" alt="Experience Icon" class="why-icon mb-3">
+        <h5>Experience</h5>
+        <p>With years of industry experience, we know how to navigate the market and secure the best deals for our clients.</p>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/trust.png" alt="Trust Icon" class="why-icon mb-3">
+        <h5>Trusted</h5>
+        <p>Our clients trust us with their most valuable investments thanks to our integrity and transparency in every transaction.</p>
+      </div>
+
+      <div class="col-md-4 text-center">
+        <img src="./Icons/Profile/customer-service.png" alt="Support Icon" class="why-icon mb-3">
+        <h5>Full Support</h5>
+        <p>From start to finish, we guide our clients through every step, making the process simple and stress-free.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Authentication Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="loginModalLabel">Admin Access</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="adminLoginForm">
+        <div class="modal-body">
+          <p class="small text-muted mb-3">Only the client can upload new listings. Enter the private credentials below.</p>
+          <div class="mb-3">
+            <label class="form-label" for="loginUsername">Username</label>
+            <input type="text" class="form-control" id="loginUsername" autocomplete="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="loginPassword">Password</label>
+            <input type="password" class="form-control" id="loginPassword" autocomplete="current-password" required>
+          </div>
+          <div class="alert alert-danger d-none" id="loginError">Incorrect username or password.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Sign In</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="uploadModalLabel">Upload New Property</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="propertyUploadForm" data-edit-mode="false">
+        <div class="modal-body">
+          <div class="loading-overlay" id="uploadLoadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Uploading property...</p>
+          </div>
+          
+          <div class="row g-3">
+            <h6 class="col-12 text-muted mb-2">Basic Information</h6>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyTitle">Property Title</label>
+              <input type="text" class="form-control" id="propertyTitle" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyStatus">Listing Type</label>
+              <select class="form-select" id="propertyStatus" required>
+                <option value="">Choose...</option>
+                <option value="sale">For Sale</option>
+                <option value="rent">For Rent</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyLocation">Location</label>
+              <input type="text" class="form-control" id="propertyLocation" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyPrice">Price (numbers only)</label>
+              <input type="number" class="form-control" id="propertyPrice" min="0" required>
+            </div>
+            
+            <h6 class="col-12 text-muted mb-2 mt-3">Property Details</h6>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyBedrooms">Bedrooms</label>
+              <input type="number" class="form-control" id="propertyBedrooms" min="0" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyBathrooms">Bathrooms</label>
+              <input type="number" class="form-control" id="propertyBathrooms" min="0" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyType">Property Type</label>
+              <select class="form-select" id="propertyType" required>
+                <option value="">Choose...</option>
+                <option value="apartment">Apartment</option>
+                <option value="house">House</option>
+                <option value="townhouse">Townhouse</option>
+                <option value="vacant-land">Vacant Land</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertySize">Size (m²)</label>
+              <input type="number" class="form-control" id="propertySize" min="0" placeholder="Square meters">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyParking">Parking Spaces</label>
+              <input type="number" class="form-control" id="propertyParking" min="0" placeholder="Number of parking spaces">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyYearBuilt">Year Built</label>
+              <input type="number" class="form-control" id="propertyYearBuilt" min="1800" max="2025" placeholder="Year">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyFurnished">Furnished</label>
+              <select class="form-select" id="propertyFurnished">
+                <option value="">Choose...</option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+            
+            <h6 class="col-12 text-muted mb-2 mt-3">Media & Description</h6>
+            <div class="col-md-6">
+              <label class="form-label" for="propertyImage">Property Images</label>
+              <input type="file" class="form-control" id="propertyImage" accept="image/*" multiple>
+              <small class="text-muted">You can select multiple images. The first one will be used as the cover photo.</small>
+            </div>
+            <div class="col-12">
+              <label class="form-label" for="propertyDescription">Short Description</label>
+              <textarea class="form-control" id="propertyDescription" rows="3" placeholder="Key highlights, square meters, amenities..."></textarea>
+            </div>
+            <div class="col-12 form-check">
+              <input class="form-check-input" type="checkbox" id="propertyFeatured">
+              <label class="form-check-label" for="propertyFeatured">
+                Feature this listing on the home page (max 3 featured properties)
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="reset" class="btn btn-light">Clear</button>
+          <button type="submit" class="btn btn-primary" id="submitPropertyBtn">Save Listing</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="row gy-5">
+          <!-- Brand Section -->
+          <div class="col-lg-4 col-md-6">
+            <div class="footer-brand">
+              <img src="./WhatsApp Image 2025-10-28 at 09.26.52_54d04303.jpg" alt="Iconic Realty" class="footer-logo">
+              <p class="footer-desc">We sell and lead you to your dream home. With God, all things are possible.</p>
+              <div class="socials">
+                <a href="https://instagram.com/Iconic_realty" target="_blank" rel="noopener" aria-label="Iconic Realty Instagram" class="social-link">
+                  <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a href="https://facebook.com/IconicRealty" target="_blank" rel="noopener" aria-label="Iconic Realty Facebook" class="social-link">
+                  <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+                <a href="https://wa.me/27630846332" target="_blank" rel="noopener" aria-label="Iconic Realty WhatsApp" class="social-link">
+                  <svg class="icon" viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Links -->
+          <div class="col-lg-2 col-md-6">
+            <h6 class="footer-title">Quick Links</h6>
+            <ul class="footer-links">
+              <li><a href="index.html">Home</a></li>
+              <li><a href="for-sale.html">For Sale</a></li>
+              <li><a href="for-rent.html">For Rent</a></li>
+              <li><a href="about-us.html">About Us</a></li>
+              <li><a href="contact.html">Contact</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact Info -->
+          <div class="col-lg-3 col-md-6">
+            <h6 class="footer-title">Get in Touch</h6>
+            <ul class="contact-list">
+              <li>
+                <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                <span>16 Minnaar Street, Forest Hill, Johannesburg</span>
+              </li>
+              <li>
+                <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                <a href="tel:+1001733057">100 173 3057</a>
+              </li>
+              <li>
+                <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=iconicrealty17@gmail.com&su=Property%20Listing%20Inquiry&body=Hello%2C%20I%27m%20interested%20in%20listing%20my%20property%20for%20sale%20or%20for%20rent.%20Please%20contact%20me%20with%20more%20information." target="_blank" rel="noopener">iconicrealty17@gmail.com</a>
+              </li>
+              <li>
+                <svg class="contact-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                <a href="https://wa.me/27630846332" target="_blank" rel="noopener">WhatsApp Us</a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Map Section -->
+          <div class="col-lg-3 col-md-6">
+            <h6 class="footer-title">Find Us</h6>
+            <div class="map-wrapper">
+              <iframe
+                src="https://www.google.com/maps?q=16%20Minnaar%20Street%20Forest%20Hill&output=embed"
+                width="100%" height="200" style="border:0; border-radius: 12px;" allowfullscreen="" loading="lazy" aria-label="Iconic Realty location map"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div class="row align-items-center">
+          <div class="col-md-6">
+            <p class="copyright">© 2025 Iconic Realty. All rights reserved.</p>
+          </div>
+          <div class="col-md-6 text-md-end">
+            <p class="motto">"We sell and lead you to your dream home. With God, all things are possible."</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>cd "c:\Users\BILLIONNAIRE\Downloads\Apps\Practice Project\Brother Bright Website"
+python -m http.server 8000
+start http://localhost:8000/

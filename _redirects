@@ -1,0 +1,7 @@
+# Netlify redirects file
+# This ensures proper routing for single-page app behavior if needed
+# Currently not needed for static HTML files, but included for future SPA migration
+
+# If you add client-side routing later, uncomment and modify:
+# /*    /index.html   200
+

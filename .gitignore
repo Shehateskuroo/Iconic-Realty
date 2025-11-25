@@ -1,0 +1,6 @@
+# Local Supabase config (keep secrets out of the repo)
+/config.js
+
+# OS / Editor files
+Thumbs.db
+.DS_Store
