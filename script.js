@@ -800,7 +800,10 @@ document.addEventListener("DOMContentLoaded", () => {
               debugLog("✅ Updated property ID to Supabase ID:", property.id);
             }
             // Also save to localStorage as backup with updated ID
+            // Remove any old entries that might have the client UUID before saving with Supabase ID
+            // Use persistProperty which handles duplicate removal properly
             persistProperty(property);
+            debugLog("✅ Saved property to localStorage with Supabase ID:", property.id);
           }
         }
       } catch (err) {
@@ -834,8 +837,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const uploadModal = bootstrap.Modal.getInstance(document.getElementById("uploadModal"));
     uploadModal?.hide();
     
-    // Wait a moment for Supabase to process, then re-render
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Wait longer for Supabase to process and sync, then re-render
+    // This ensures the property is fully available in Supabase before rendering
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await fetchAndRenderListings();
     
     // Show success message
@@ -941,8 +945,16 @@ function getStoredProperties() {
 
 function persistProperty(property) {
   const existing = getStoredProperties();
-  existing.push(property);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+  // Remove any existing property with the same ID or title to prevent duplicates
+  const filtered = existing.filter(p => {
+    // Keep properties that don't match by ID or title
+    return p.id !== property.id && 
+           String(p.id) !== String(property.id) &&
+           p.title !== property.title;
+  });
+  filtered.push(property);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+  debugLog("✅ Saved property to localStorage with ID:", property.id);
 }
 
 /* -------------------------------------------------------------------------- */
