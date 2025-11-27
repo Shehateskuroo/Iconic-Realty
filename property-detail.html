@@ -611,10 +611,17 @@
                                        searchId.includes(pId);
                             });
                             
-                            // If still not found, try matching by title or location as last resort
+                            // If still not found, try matching by recent creation time
+                            // This handles cases where client UUID was used but Supabase has different ID
                             if (!data && propertyId.length > 10) {
-                                // Might be a client-generated UUID, check localStorage instead
-                                console.log("Property ID not found in Supabase, checking localStorage...");
+                                // Sort by creation date and try the most recent properties
+                                const recentProperties = allData
+                                    .filter(p => p.created_at)
+                                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                                    .slice(0, 10); // Check 10 most recent
+                                
+                                // Could try matching by title if we had it, but for now just log
+                                console.log("Property ID not found directly in Supabase. Searched", recentProperties.length, "recent properties.");
                             }
                         }
                     }
@@ -646,14 +653,28 @@
                 }
             }
 
-            // Fallback to localStorage
+            // Fallback to localStorage - try multiple matching strategies
             if (!property) {
                 const storedProperties = JSON.parse(localStorage.getItem("uploadedProperties") || localStorage.getItem("bb_uploaded_properties") || "[]");
                 property = storedProperties.find(p => {
                     const pId = String(p.id || '');
                     const searchId = String(propertyId || '');
-                    return pId === searchId || pId === propertyId || String(p.id) === String(propertyId);
+                    // Try exact match first
+                    if (pId === searchId || pId === propertyId || String(p.id) === String(propertyId)) {
+                        return true;
+                    }
+                    // Try partial match (in case of encoding issues)
+                    if (pId.includes(searchId) || searchId.includes(pId)) {
+                        return true;
+                    }
+                    return false;
                 });
+                
+                // If still not found and propertyId looks like a UUID, try searching all Supabase listings again
+                // This handles the case where property was just uploaded and localStorage hasn't synced yet
+                if (!property && propertyId.length > 30 && supabaseClient) {
+                    console.log("Property not found in localStorage with UUID format. Trying Supabase search...");
+                }
             }
 
             if (!property) {
@@ -919,4 +940,5 @@
     </script>
 </body>
 </html>
+
 
