@@ -531,11 +531,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Reset form when modal is closed
+  // Reset form when modal is closed (only if not in edit mode)
   const uploadModalElement = document.getElementById("uploadModal");
   if (uploadModalElement) {
     uploadModalElement.addEventListener("hidden.bs.modal", () => {
-      resetFormToCreateMode();
+      const form = document.getElementById("propertyUploadForm");
+      // Only reset if not in edit mode
+      if (form && form.dataset.editMode !== "true") {
+        resetFormToCreateMode();
+      }
     });
   }
 
@@ -1141,7 +1145,7 @@ function createPropertyCard(property) {
     <button class="delete-property-btn" data-property-id="${property.id}" title="Delete Property">
       🗑️ Delete
     </button>
-    <a href="property-detail.html?id=${property.id}" class="card-link-wrapper">
+    <a href="property-detail.html?id=${encodeURIComponent(property.id)}" class="card-link-wrapper">
       <img src="${coverImage}" alt="${property.title}">
       <div class="card-body">
         <h5 class="card-title">${property.title}</h5>
@@ -1229,26 +1233,45 @@ function loadPropertyIntoForm(property) {
     submitBtn.textContent = "Update Property";
   }
 
-  // Fill in all form fields
-  document.getElementById("propertyTitle").value = property.title || "";
-  document.getElementById("propertyStatus").value = property.transaction || "";
+  // Fill in all form fields with null checks
+  const setFieldValue = (id, value) => {
+    const el = document.getElementById(id);
+    if (!el) {
+      console.warn(`Form field not found: ${id}`);
+      return;
+    }
+    if (el.type === 'checkbox') {
+      el.checked = value || false;
+    } else {
+      el.value = value || "";
+    }
+  };
+
+  setFieldValue("propertyTitle", property.title);
+  setFieldValue("propertyStatus", property.transaction);
+  
   // Update price label in edit mode based on transaction
   const _priceLabelEl = document.querySelector('label[for="propertyPrice"]');
   if (_priceLabelEl) {
     const t = (property.transaction || "").toString().toLowerCase();
     _priceLabelEl.textContent = (t === "rent" || t === "for rent") ? "Price (p/m)" : "Price (numbers only)";
   }
-  document.getElementById("propertyLocation").value = property.location || "";
-  document.getElementById("propertyPrice").value = property.price || "";
-  document.getElementById("propertyBedrooms").value = property.bedrooms || "";
-  document.getElementById("propertyBathrooms").value = property.bathrooms || "";
-  document.getElementById("propertySize").value = property.size || "";
-  document.getElementById("propertyParking").value = property.parking || "";
-  document.getElementById("propertyYearBuilt").value = property.yearBuilt || property.year_built || "";
-  document.getElementById("propertyFurnished").value = property.furnished || "";
-  document.getElementById("propertyType").value = property.type || "";
-  document.getElementById("propertyDescription").value = property.description || "";
-  document.getElementById("propertyFeatured").checked = property.featured || false;
+  
+  setFieldValue("propertyLocation", property.location);
+  setFieldValue("propertyPrice", property.price);
+  setFieldValue("propertyBedrooms", property.bedrooms);
+  setFieldValue("propertyBathrooms", property.bathrooms);
+  setFieldValue("propertySize", property.size);
+  setFieldValue("propertyParking", property.parking);
+  setFieldValue("propertyYearBuilt", property.yearBuilt || property.year_built);
+  setFieldValue("propertyFurnished", property.furnished);
+  setFieldValue("propertyType", property.type);
+  
+  const descEl = document.getElementById("propertyDescription");
+  if (descEl) descEl.value = property.description || "";
+  
+  const featuredEl = document.getElementById("propertyFeatured");
+  if (featuredEl) featuredEl.checked = property.featured || false;
 
   // Note: Images are not pre-filled as file inputs can't be set programmatically for security
   // The existing images will be preserved if no new images are uploaded
@@ -1371,3 +1394,4 @@ window.addEventListener("storage", (event) => {
     renderDynamicProperties();
   }
 });
+
