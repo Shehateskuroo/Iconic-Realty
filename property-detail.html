@@ -547,14 +547,15 @@
         const debugError = function() {};
 
         // Initialize Supabase client for property detail page
-        const SUPABASE_URL = window.SUPABASE_URL || null;
-        const SUPABASE_ANON_KEY = window.SUPABASE_ANON_KEY || null;
+        // Use values from window (already set by config.js and script.js)
+        const supabaseUrl = window.SUPABASE_URL || null;
+        const supabaseKey = window.SUPABASE_ANON_KEY || null;
         let supabaseClient = null;
 
         // Initialize Supabase if available
-        if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
+        if (supabaseUrl && supabaseKey && window.supabase) {
             try {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
                 debugLog("✅ Supabase connected for property detail page");
             } catch (error) {
                 debugError("❌ Failed to initialize Supabase:", error);
@@ -564,7 +565,12 @@
         // Property Detail Page Script
         async function loadPropertyDetail() {
             const urlParams = new URLSearchParams(window.location.search);
-            const propertyId = urlParams.get('id');
+            let propertyId = urlParams.get('id');
+            
+            // Decode the property ID from URL
+            if (propertyId) {
+                propertyId = decodeURIComponent(propertyId);
+            }
             
             if (!propertyId) {
                 document.getElementById('propertyDetailContainer').innerHTML = `
@@ -582,13 +588,38 @@
             // Try to fetch from Supabase first
             if (supabaseClient) {
                 try {
-                    const { data, error } = await supabaseClient
+                    // Try matching by Supabase ID first
+                    let { data, error } = await supabaseClient
                         .from("listings")
                         .select("*")
                         .eq("id", propertyId)
                         .single();
 
-                    if (!error && data) {
+                    // If not found by ID, try searching all listings (in case ID format doesn't match)
+                    if (error || !data) {
+                        const { data: allData, error: allError } = await supabaseClient
+                            .from("listings")
+                            .select("*");
+                        
+                        if (!allError && allData && allData.length > 0) {
+                            // Try to find by matching ID (handling UUIDs and other formats)
+                            data = allData.find(p => {
+                                const pId = String(p.id || '');
+                                const searchId = String(propertyId || '');
+                                return pId === searchId || 
+                                       pId.includes(searchId) || 
+                                       searchId.includes(pId);
+                            });
+                            
+                            // If still not found, try matching by title or location as last resort
+                            if (!data && propertyId.length > 10) {
+                                // Might be a client-generated UUID, check localStorage instead
+                                console.log("Property ID not found in Supabase, checking localStorage...");
+                            }
+                        }
+                    }
+
+                    if (data) {
                         property = {
                             id: data.id,
                             title: data.title,
@@ -618,7 +649,11 @@
             // Fallback to localStorage
             if (!property) {
                 const storedProperties = JSON.parse(localStorage.getItem("uploadedProperties") || localStorage.getItem("bb_uploaded_properties") || "[]");
-                property = storedProperties.find(p => p.id === propertyId || String(p.id) === String(propertyId));
+                property = storedProperties.find(p => {
+                    const pId = String(p.id || '');
+                    const searchId = String(propertyId || '');
+                    return pId === searchId || pId === propertyId || String(p.id) === String(propertyId);
+                });
             }
 
             if (!property) {
@@ -884,6 +919,4 @@
     </script>
 </body>
 </html>
-
-
 
