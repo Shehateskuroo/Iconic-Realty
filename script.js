@@ -770,6 +770,10 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Failed to update property in database. Changes saved locally as backup.");
           } else {
             debugLog("✅ Updated listing in Supabase", updateData);
+            // Ensure property ID is preserved (use Supabase ID if available)
+            if (updateData && updateData.length > 0 && updateData[0].id) {
+              property.id = updateData[0].id;
+            }
             // Also update localStorage as backup
             updatePropertyInStorage(property);
           }
@@ -790,7 +794,12 @@ document.addEventListener("DOMContentLoaded", () => {
             throw new Error("Failed to save property to database. Saved locally as backup.");
           } else {
             debugLog("✅ Inserted listing to Supabase", insertData);
-            // Also save to localStorage as backup
+            // Update property with Supabase ID
+            if (insertData && insertData.length > 0 && insertData[0].id) {
+              property.id = insertData[0].id; // Use Supabase-generated ID
+              debugLog("✅ Updated property ID to Supabase ID:", property.id);
+            }
+            // Also save to localStorage as backup with updated ID
             persistProperty(property);
           }
         }
