@@ -605,23 +605,37 @@
                             // Try to find by matching ID (handling UUIDs and other formats)
                             data = allData.find(p => {
                                 const pId = String(p.id || '');
+                                const clientUuid = String(p.client_uuid || '');
                                 const searchId = String(propertyId || '');
-                                return pId === searchId || 
-                                       pId.includes(searchId) || 
-                                       searchId.includes(pId);
+                                // Match by Supabase ID
+                                if (pId === searchId || pId.includes(searchId) || searchId.includes(pId)) {
+                                    return true;
+                                }
+                                // Match by client UUID if stored
+                                if (clientUuid && (clientUuid === searchId || clientUuid.includes(searchId) || searchId.includes(clientUuid))) {
+                                    return true;
+                                }
+                                return false;
                             });
                             
-                            // If still not found, try matching by recent creation time
+                            // If still not found, try matching by most recent property (created within last hour)
                             // This handles cases where client UUID was used but Supabase has different ID
                             if (!data && propertyId.length > 10) {
-                                // Sort by creation date and try the most recent properties
-                                const recentProperties = allData
-                                    .filter(p => p.created_at)
-                                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
-                                    .slice(0, 10); // Check 10 most recent
+                                const now = new Date();
+                                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
                                 
-                                // Could try matching by title if we had it, but for now just log
-                                console.log("Property ID not found directly in Supabase. Searched", recentProperties.length, "recent properties.");
+                                // Get the most recently created property
+                                const recentProperties = allData
+                                    .filter(p => p.created_at && new Date(p.created_at) > oneHourAgo)
+                                    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                                
+                                if (recentProperties.length > 0) {
+                                    // Use the most recent property as fallback
+                                    console.log("Property ID not found directly. Using most recent property as fallback.");
+                                    data = recentProperties[0];
+                                } else {
+                                    console.log("Property ID not found and no recent properties available.");
+                                }
                             }
                         }
                     }
@@ -940,5 +954,6 @@
     </script>
 </body>
 </html>
+
 
 
