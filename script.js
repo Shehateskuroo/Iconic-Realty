@@ -573,12 +573,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
 
+    // Check if we're in edit mode (check before showing loading overlay)
+    const isEditMode = propertyForm.dataset.editMode === "true";
+    
     // Show loading state
     const submitBtn = document.getElementById("formSubmitBtn");
     const submitText = submitBtn?.querySelector(".submit-text");
     const loadingText = submitBtn?.querySelector(".loading-text");
     const spinner = submitBtn?.querySelector(".spinner-border");
     const resetBtn = document.getElementById("formResetBtn");
+    const loadingOverlay = document.getElementById("uploadLoadingOverlay");
+    
+    // Show loading overlay
+    if (loadingOverlay) {
+      loadingOverlay.style.display = "flex";
+      const overlayText = loadingOverlay.querySelector("p");
+      if (overlayText) {
+        overlayText.textContent = isEditMode ? "Updating property..." : "Uploading property...";
+      }
+    }
     
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -587,9 +600,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (spinner) spinner.classList.remove("d-none");
     }
     if (resetBtn) resetBtn.disabled = true;
-
-    // Check if we're in edit mode
-    const isEditMode = propertyForm.dataset.editMode === "true";
     const editPropertyId = propertyForm.dataset.editPropertyId;
 
     // Check featured property cap (max 3) - but allow if editing the same property
@@ -715,6 +725,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const listingRow = {
+          // Store original client UUID for ID matching (optional - requires client_uuid column in Supabase)
+          // If column doesn't exist, Supabase will ignore this field
+          client_uuid: property.id,
           title: property.title,
           transaction: property.transaction,
           location: property.location,
@@ -782,10 +795,25 @@ document.addEventListener("DOMContentLoaded", () => {
           listingRow.image_url = uploadedUrls[0] || property.image || null;
           listingRow.images = uploadedUrls;
 
-          const { data: insertData, error: insertError } = await supabaseClient
+          let insertData = null;
+          let insertError = null;
+          
+          // Try inserting with client_uuid first
+          ({ data: insertData, error: insertError } = await supabaseClient
             .from("listings")
             .insert([listingRow])
-            .select();
+            .select());
+
+          // If error and it's about unknown column (client_uuid doesn't exist), retry without it
+          if (insertError && (insertError.message?.includes('client_uuid') || insertError.message?.includes('column') || insertError.code === '42703')) {
+            debugLog("client_uuid column doesn't exist, retrying without it");
+            // Remove client_uuid and retry
+            const { client_uuid, ...listingRowWithoutUuid } = listingRow;
+            ({ data: insertData, error: insertError } = await supabaseClient
+              .from("listings")
+              .insert([listingRowWithoutUuid])
+              .select());
+          }
 
           if (insertError) {
             debugError("Failed to insert listing", insertError);
@@ -856,6 +884,14 @@ document.addEventListener("DOMContentLoaded", () => {
       debugError("Property form submission error:", error);
     } finally {
       // Reset loading state
+      // Hide loading overlay
+      const loadingOverlay = document.getElementById("uploadLoadingOverlay");
+      if (loadingOverlay) {
+        loadingOverlay.style.display = "none";
+        // Reset styles when hiding
+        loadingOverlay.style.cssText = "display: none;";
+      }
+      
       const submitBtn = document.getElementById("formSubmitBtn");
       const submitText = submitBtn?.querySelector(".submit-text");
       const loadingText = submitBtn?.querySelector(".loading-text");
@@ -1327,6 +1363,52 @@ function resetFormToCreateMode() {
 }
 
 /* -------------------------------------------------------------------------- */
+/*                    Loading Screen Helper Functions                         */
+/* -------------------------------------------------------------------------- */
+function showLoadingScreen(message = "Loading...") {
+  let loadingOverlay = document.getElementById("globalLoadingOverlay");
+  
+  if (!loadingOverlay) {
+    // Create the loading overlay if it doesn't exist
+    loadingOverlay = document.createElement("div");
+    loadingOverlay.id = "globalLoadingOverlay";
+    loadingOverlay.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      color: white;
+    `;
+    loadingOverlay.innerHTML = `
+      <div class="spinner-border text-light" role="status" style="width: 3rem; height: 3rem; margin-bottom: 1rem;">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p style="font-size: 1.2rem; font-weight: 500; margin: 0;">${message}</p>
+    `;
+    document.body.appendChild(loadingOverlay);
+  } else {
+    // Update message and show
+    const messageEl = loadingOverlay.querySelector("p");
+    if (messageEl) messageEl.textContent = message;
+    loadingOverlay.style.display = "flex";
+  }
+}
+
+function hideLoadingScreen() {
+  const loadingOverlay = document.getElementById("globalLoadingOverlay");
+  if (loadingOverlay) {
+    loadingOverlay.style.display = "none";
+  }
+}
+
+/* -------------------------------------------------------------------------- */
 /*                         Delete Property Function                           */
 /* -------------------------------------------------------------------------- */
 async function handleDeleteProperty(propertyId, propertyTitle) {
@@ -1344,6 +1426,9 @@ async function handleDeleteProperty(propertyId, propertyTitle) {
 
   if (!confirmed) return;
 
+  // Show loading screen
+  showLoadingScreen("Deleting property...");
+
   try {
     // Delete from Supabase if connected
     if (supabaseClient) {
@@ -1358,19 +1443,33 @@ async function handleDeleteProperty(propertyId, propertyTitle) {
       }
 
       debugLog('✅ Property deleted from Supabase');
-    } else {
-      // Delete from localStorage
-      const properties = getStoredProperties();
-      const filtered = properties.filter(p => p.id !== propertyId);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-      debugLog('✅ Property deleted from localStorage');
     }
+    
+    // ALWAYS delete from localStorage too (even if Supabase delete succeeded)
+    // This ensures sync across devices and prevents stale data
+    const properties = getStoredProperties();
+    const filtered = properties.filter(p => {
+      const pId = String(p.id || '');
+      const deleteId = String(propertyId || '');
+      return pId !== deleteId && String(p.id) !== String(propertyId);
+    });
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+    debugLog('✅ Property deleted from localStorage');
 
-    // Refresh all displays - main page, for-sale, and for-rent
+    // Wait for Supabase to sync, then refresh all displays
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await fetchAndRenderListings();
+    
+    // Hide loading screen
+    hideLoadingScreen();
+    
+    // Show success message
     alert('✅ Property deleted successfully!');
 
   } catch (error) {
+    // Hide loading screen on error
+    hideLoadingScreen();
+    
     debugError('Delete error:', error);
     const errorMessage = error.message || "An unexpected error occurred while deleting the property.";
     alert(`❌ ${errorMessage}\n\nPlease try again or contact support if the problem persists.`);
@@ -1415,4 +1514,3 @@ window.addEventListener("storage", (event) => {
     renderDynamicProperties();
   }
 });
-
