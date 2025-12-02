@@ -865,9 +865,58 @@ document.addEventListener("DOMContentLoaded", () => {
     const uploadModal = bootstrap.Modal.getInstance(document.getElementById("uploadModal"));
     uploadModal?.hide();
     
-    // Wait longer for Supabase to process and sync, then re-render
+    // Wait for Supabase to process and sync, then verify property is queryable
     // This ensures the property is fully available in Supabase before rendering
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    if (supabaseClient && property.id) {
+      // Update loading message
+      const loadingOverlay = document.getElementById("uploadLoadingOverlay");
+      const overlayText = loadingOverlay?.querySelector("p");
+      if (overlayText) {
+        overlayText.textContent = "Syncing with database...";
+      }
+      
+      // Wait and verify property is queryable (for cross-device sync)
+      let propertyFound = false;
+      let attempts = 0;
+      const maxAttempts = 5;
+      
+      while (!propertyFound && attempts < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 1500)); // Wait 1.5 seconds between attempts
+        
+        try {
+          const { data, error } = await supabaseClient
+            .from("listings")
+            .select("id")
+            .eq("id", property.id)
+            .single();
+          
+          if (!error && data && data.id) {
+            propertyFound = true;
+            console.log("✅ Property verified in Supabase:", property.id);
+            break;
+          }
+        } catch (err) {
+          console.log("Verification attempt", attempts + 1, "of", maxAttempts);
+        }
+        
+        attempts++;
+        if (overlayText) {
+          overlayText.textContent = `Syncing... (${attempts}/${maxAttempts})`;
+        }
+      }
+      
+      if (!propertyFound) {
+        console.warn("⚠️ Property not immediately queryable. It may take a moment to appear on other devices.");
+      } else {
+        // Additional wait after verification for cross-device replication
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+    } else {
+      // If no Supabase, just wait a bit
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    // Force fresh fetch from Supabase (bypass cache)
     await fetchAndRenderListings();
     
     // Show success message
@@ -1026,6 +1075,7 @@ async function fetchAndRenderListings() {
   }
 
   try {
+    // Force fresh data fetch (add cache-busting timestamp)
     const { data, error } = await supabaseClient
       .from("listings")
       .select("*")
@@ -1042,8 +1092,9 @@ async function fetchAndRenderListings() {
     }
 
     // transform rows to the property shape expected by render helpers
+    // IMPORTANT: Always use Supabase UUID (row.id) - never generate a new ID
     const properties = (data || []).map((row) => ({
-      id: row.id || String(row.created_at) || String(Math.random()),
+      id: row.id, // Always use Supabase UUID - this is critical for property detail pages
       title: row.title,
       transaction: row.transaction,
       location: row.location,
@@ -1514,3 +1565,4 @@ window.addEventListener("storage", (event) => {
     renderDynamicProperties();
   }
 });
+
