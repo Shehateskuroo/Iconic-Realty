@@ -604,37 +604,61 @@
                         if (!allError && allData && allData.length > 0) {
                             // Try to find by matching ID (handling UUIDs and other formats)
                             data = allData.find(p => {
-                                const pId = String(p.id || '');
-                                const clientUuid = String(p.client_uuid || '');
-                                const searchId = String(propertyId || '');
-                                // Match by Supabase ID
-                                if (pId === searchId || pId.includes(searchId) || searchId.includes(pId)) {
+                                const pId = String(p.id || '').trim();
+                                const clientUuid = String(p.client_uuid || '').trim();
+                                const searchId = String(propertyId || '').trim();
+                                
+                                // Exact match by Supabase ID (UUID)
+                                if (pId === searchId) {
                                     return true;
                                 }
-                                // Match by client UUID if stored
-                                if (clientUuid && (clientUuid === searchId || clientUuid.includes(searchId) || searchId.includes(clientUuid))) {
+                                
+                                // Exact match by client UUID if stored
+                                if (clientUuid && clientUuid === searchId) {
                                     return true;
                                 }
+                                
+                                // Case-insensitive match
+                                if (pId.toLowerCase() === searchId.toLowerCase()) {
+                                    return true;
+                                }
+                                
                                 return false;
                             });
                             
-                            // If still not found, try matching by most recent property (created within last hour)
-                            // This handles cases where client UUID was used but Supabase has different ID
-                            if (!data && propertyId.length > 10) {
+                            // If still not found and propertyId looks like a UUID, try more aggressive search
+                            if (!data && propertyId.length > 30) {
+                                // UUID format detected - search by matching partial UUID or try most recent
                                 const now = new Date();
-                                const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000);
+                                const twoHoursAgo = new Date(now.getTime() - 2 * 60 * 60 * 1000);
                                 
-                                // Get the most recently created property
+                                // Get recently created properties (within last 2 hours)
                                 const recentProperties = allData
-                                    .filter(p => p.created_at && new Date(p.created_at) > oneHourAgo)
+                                    .filter(p => {
+                                        if (!p.created_at) return false;
+                                        const createdDate = new Date(p.created_at);
+                                        return createdDate > twoHoursAgo;
+                                    })
                                     .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
                                 
                                 if (recentProperties.length > 0) {
-                                    // Use the most recent property as fallback
-                                    console.log("Property ID not found directly. Using most recent property as fallback.");
-                                    data = recentProperties[0];
-                                } else {
-                                    console.log("Property ID not found and no recent properties available.");
+                                    // Try to match by partial UUID first
+                                    const propertyIdLower = propertyId.toLowerCase();
+                                    const partialMatch = recentProperties.find(p => {
+                                        const pId = String(p.id || '').toLowerCase();
+                                        // Match if UUIDs share significant portion
+                                        return pId.includes(propertyIdLower.substring(0, 20)) || 
+                                               propertyIdLower.includes(pId.substring(0, 20));
+                                    });
+                                    
+                                    if (partialMatch) {
+                                        console.log("Property found by partial UUID match");
+                                        data = partialMatch;
+                                    } else {
+                                        // Use the most recent property as last resort
+                                        console.log("Property ID not found. Using most recent property as fallback.");
+                                        data = recentProperties[0];
+                                    }
                                 }
                             }
                         }
@@ -954,6 +978,5 @@
     </script>
 </body>
 </html>
-
 
 
