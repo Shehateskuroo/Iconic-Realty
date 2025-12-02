@@ -440,9 +440,11 @@
       </div>
       <form id="propertyUploadForm" data-edit-mode="false">
         <div class="modal-body">
-          <div class="loading-overlay" id="uploadLoadingOverlay" style="display: none;">
-            <div class="loading-spinner"></div>
-            <p>Uploading property...</p>
+          <div class="loading-overlay" id="uploadLoadingOverlay" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.95); flex-direction: column; justify-content: center; align-items: center; z-index: 1050; border-radius: 0.5rem;">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem; margin-bottom: 1rem;">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <p style="font-size: 1.1rem; font-weight: 500; color: #333; margin: 0;">Uploading property...</p>
           </div>
           
           <div class="row g-3">
@@ -620,6 +622,4 @@
   </footer>
 
 </body>
-</html>cd "c:\Users\BILLIONNAIRE\Downloads\Apps\Practice Project\Brother Bright Website"
-python -m http.server 8000
-start http://localhost:8000/
+</html>
