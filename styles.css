@@ -687,11 +687,6 @@ a {
     padding: 1.5rem 1rem;
   }
   
-  .modern-caption .container {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-  
   .btn-carousel-cta {
     font-size: 1rem;
     padding: 0.9rem 2.5rem;
@@ -2859,6 +2854,5 @@ a {
     font-size: 3rem;
   }
 }
-
 
 
