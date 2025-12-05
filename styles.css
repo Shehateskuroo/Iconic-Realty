@@ -438,13 +438,20 @@ a {
 /* Modern caption styling */
 .modern-caption {
   position: absolute;
-  bottom: 0;
+  top: 50%;
   left: 0;
   right: 0;
-  padding: 4rem 0 5rem;
+  transform: translateY(-50%);
+  padding: 2rem 0;
   text-align: center;
   z-index: 2;
   background: transparent;
+}
+
+.modern-caption .container {
+  max-width: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .caption-badge {
@@ -486,8 +493,9 @@ a {
 }
 
 .carousel-title:hover {
-  color: #f3f1ff;
-  text-shadow: 2px 4px 25px rgba(26, 12, 75, 0.9), 0 0 30px rgba(26, 12, 75, 0.5);
+  color: #9b7ff7;
+  text-shadow: 2px 4px 25px rgba(0, 0, 0, 0.9), 0 0 30px rgba(155, 127, 247, 0.7);
+  transform: scale(1.02);
 }
 
 .carousel-subtitle {
@@ -505,8 +513,8 @@ a {
 }
 
 .carousel-subtitle:hover {
-  color: #f3f1ff;
-  text-shadow: 1px 2px 15px rgba(26, 12, 75, 0.8), 0 0 20px rgba(26, 12, 75, 0.4);
+  color: #9b7ff7;
+  text-shadow: 1px 2px 15px rgba(0, 0, 0, 0.8), 0 0 20px rgba(155, 127, 247, 0.6);
 }
 
 .btn-carousel-cta {
@@ -543,24 +551,25 @@ a {
 
 .btn-carousel-cta:hover {
   transform: translateY(-4px) scale(1.05);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 15px 40px rgba(155, 127, 247, 0.6), 0 0 20px rgba(155, 127, 247, 0.5);
+  background: linear-gradient(135deg, #9b7ff7 0%, #b8a3ff 100%);
   color: #1A0C4B;
 }
 
 /* Modern indicators */
 .modern-indicators {
-  bottom: 2rem;
+  bottom: 1rem;
   z-index: 3;
   margin-bottom: 0;
 }
 
 .modern-indicators button {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: rgba(255, 255, 255, 0.6);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  margin: 0 5px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  margin: 0 4px;
   transition: all 0.3s ease;
   opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
@@ -568,8 +577,8 @@ a {
 
 .modern-indicators button.active {
   background-color: white;
-  width: 30px;
-  border-radius: 6px;
+  width: 24px;
+  border-radius: 5px;
   border-color: white;
   box-shadow: 0 2px 12px rgba(255, 255, 255, 0.6);
 }
@@ -649,7 +658,12 @@ a {
   }
   
   .modern-caption {
-    padding: 3rem 0 4rem;
+    padding: 2rem 1rem;
+  }
+  
+  .modern-caption .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
 
@@ -670,12 +684,18 @@ a {
   }
   
   .modern-caption {
-    padding: 2rem 1rem 3rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .modern-caption .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
   
   .btn-carousel-cta {
     font-size: 1rem;
-    padding: 0.9rem 2.2rem;
+    padding: 0.9rem 2.5rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
   }
   
   .modern-control {
@@ -697,12 +717,33 @@ a {
     min-height: 400px;
   }
   
+  .modern-caption .container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .caption-badge {
+    font-size: 0.7rem;
+    padding: 0.35rem 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
   .carousel-title {
     font-size: 1.8rem;
+    margin-bottom: 0.75rem;
   }
   
   .carousel-subtitle {
     font-size: 0.95rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .btn-carousel-cta {
+    font-size: 0.9rem;
+    padding: 0.8rem 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    min-width: auto;
+    white-space: nowrap;
   }
   
   .modern-control {
