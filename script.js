@@ -1592,5 +1592,3 @@ window.addEventListener("storage", (event) => {
     renderDynamicProperties();
   }
 });
-
-
