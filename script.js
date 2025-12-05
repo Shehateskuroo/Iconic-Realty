@@ -489,6 +489,34 @@ function ensureAuthenticated() {
   return false;
 }
 
+// Check if admin is logged in via Supabase and show/hide upload button
+async function checkAdminAuthAndToggleUpload() {
+  const uploadBtn = document.getElementById("uploadPropertyBtn");
+  if (!uploadBtn) return;
+  
+  // Check if Supabase is configured
+  if (supabaseClient) {
+    try {
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session?.user) {
+        uploadBtn.classList.remove("d-none");
+      } else {
+        uploadBtn.classList.add("d-none");
+      }
+    } catch (error) {
+      console.error("Error checking auth:", error);
+      uploadBtn.classList.add("d-none");
+    }
+  } else {
+    // Fallback to session storage auth
+    if (isAuthenticated()) {
+      uploadBtn.classList.remove("d-none");
+    } else {
+      uploadBtn.classList.add("d-none");
+    }
+  }
+}
+
 // Initialize upload/authentication functionality when DOM is ready
 document.addEventListener("DOMContentLoaded", () => {
   // Get DOM elements
@@ -517,6 +545,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Create modal instances
   loginModal = createModalInstance("loginModal");
   uploadModal = createModalInstance("uploadModal");
+
+  // Check admin auth status and toggle upload button visibility
+  checkAdminAuthAndToggleUpload();
 
   // Set up upload button click handler
   if (uploadTrigger) {
