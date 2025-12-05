@@ -552,13 +552,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Set up upload button click handler
   if (uploadTrigger) {
     uploadTrigger.addEventListener("click", () => {
-      if (isAuthenticated()) {
-        // Reset form to create mode when opening via upload button
-        resetFormToCreateMode();
-        uploadModal?.show();
-      } else {
-        ensureAuthenticated();
-      }
+      // Reset form to create mode when opening via upload button
+      resetFormToCreateMode();
+      uploadModal?.show();
     });
   }
 
@@ -1596,4 +1592,5 @@ window.addEventListener("storage", (event) => {
     renderDynamicProperties();
   }
 });
+
 
