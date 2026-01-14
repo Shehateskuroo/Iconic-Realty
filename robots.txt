@@ -1,10 +1,8 @@
 User-agent: *
 Allow: /
 
-# NOTE: Update this URL with your actual domain after deployment
-# For Netlify: https://your-site.netlify.app/sitemap.xml
-# For GitHub Pages: https://username.github.io/repo-name/sitemap.xml
-# For custom domain: https://yourdomain.com/sitemap.xml
-Sitemap: /sitemap.xml
+Sitemap: https://iiconicrealty.co.za/sitemap.xml
+
+
 
 
