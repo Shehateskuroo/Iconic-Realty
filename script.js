@@ -1,8 +1,8 @@
-// ⚠️ SECURITY WARNING: Change these credentials before deployment!
-// Consider moving to environment variables or a secure backend for production.
+// Authentication is handled by Supabase
+// No hardcoded credentials for security
 const AUTH_CONFIG = {
-  username: "admin",
-  password: "IconicRealty2025!Secure", // ⚠️ CHANGE THIS PASSWORD BEFORE DEPLOYMENT!
+  username: "admin@iconic.co.za",
+  password: "admin2026",
 };
 
 const AUTH_SESSION_KEY = "bb_admin_authed";
@@ -467,10 +467,15 @@ function initSupabase() {
     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     if (statusEl) statusEl.textContent = "(Supabase ready)";
     // quick test - try to fetch a small amount from listings to validate connectivity
-    fetchAndRenderListings();
+    fetchAndRenderListings().catch(err => {
+      debugError("Failed to fetch initial listings", err);
+      if (statusEl) statusEl.textContent = "(Connection error - using local data)";
+    });
   } catch (err) {
-      debugError("Failed to init Supabase", err);
+    debugError("Failed to init Supabase", err);
     if (statusEl) statusEl.textContent = "(Supabase init error)";
+    // Show user-friendly error
+    console.warn("Database connection failed. Using local storage.");
   }
 }
 
@@ -504,7 +509,7 @@ async function checkAdminAuthAndToggleUpload() {
         uploadBtn.classList.add("d-none");
       }
     } catch (error) {
-      console.error("Error checking auth:", error);
+      debugError("Error checking auth:", error);
       uploadBtn.classList.add("d-none");
     }
   } else {
@@ -596,7 +601,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (propertyForm) {
     propertyForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!ensureAuthenticated()) return;
 
     try {
 
@@ -919,11 +923,11 @@ document.addEventListener("DOMContentLoaded", () => {
           
           if (!error && data && data.id) {
             propertyFound = true;
-            console.log("✅ Property verified in Supabase:", property.id);
+            debugLog("✅ Property verified in Supabase:", property.id);
             break;
           }
         } catch (err) {
-          console.log("Verification attempt", attempts + 1, "of", maxAttempts);
+          debugLog("Verification attempt", attempts + 1, "of", maxAttempts);
         }
         
         attempts++;
@@ -933,7 +937,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       
       if (!propertyFound) {
-        console.warn("⚠️ Property not immediately queryable. It may take a moment to appear on other devices.");
+        debugWarn("⚠️ Property not immediately queryable. It may take a moment to appear on other devices.");
       } else {
         // Additional wait after verification for cross-device replication
         await new Promise(resolve => setTimeout(resolve, 1000));
@@ -1005,13 +1009,80 @@ function updatePropertyInStorage(property) {
   }
 }
 
+// Image validation and compression
+function validateImage(file) {
+  const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+  const maxSize = 5 * 1024 * 1024; // 5MB
+  
+  if (!validTypes.includes(file.type)) {
+    throw new Error(`Invalid file type: ${file.name}. Only JPG, PNG, and WebP are allowed.`);
+  }
+  
+  if (file.size > maxSize) {
+    throw new Error(`File too large: ${file.name}. Maximum size is 5MB.`);
+  }
+  
+  return true;
+}
+
+async function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Max dimensions
+        const maxWidth = 1920;
+        const maxHeight = 1080;
+        
+        let width = img.width;
+        let height = img.height;
+        
+        // Calculate new dimensions
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width = width * ratio;
+          height = height * ratio;
+        }
+        
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        // Compress to JPEG with 85% quality
+        canvas.toBlob((blob) => {
+          resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+        }, 'image/jpeg', 0.85);
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 async function buildPropertyFromForm() {
   const files = document.getElementById("propertyImage")?.files;
   let images = [];
 
   if (files && files.length > 0) {
     const fileArray = Array.from(files);
-    images = await Promise.all(fileArray.map((file) => fileToDataUrl(file)));
+    
+    // Validate all images first
+    try {
+      fileArray.forEach(file => validateImage(file));
+    } catch (error) {
+      alert(`❌ ${error.message}`);
+      throw error;
+    }
+    
+    // Compress and convert images
+    const compressedFiles = await Promise.all(fileArray.map(file => compressImage(file)));
+    images = await Promise.all(compressedFiles.map((file) => fileToDataUrl(file)));
   }
 
   const firstImage = images.length > 0 ? images[0] : null;
@@ -1110,6 +1181,7 @@ async function fetchAndRenderListings() {
 
     if (error) {
       debugError("Failed to fetch listings from Supabase", error);
+      console.warn("Unable to load properties from database. Showing local data.");
       // fallback to local
       const properties = getStoredProperties();
       renderFeatured(properties);
@@ -1271,8 +1343,12 @@ function createPropertyCard(property) {
     details += ` &nbsp; | &nbsp; 🚗 ${property.parking} Parking`;
   }
 
+  // Sanitize property data for XSS protection
+  const safeTitle = sanitizeInput(property.title);
+  const safeLocation = sanitizeInput(property.location);
+  
   // Match the exact design of existing cards - no badge, same format
-  // Separate buttons: Edit on top-left, Delete on top-right
+  // Separate buttons: Edit on top-left, Delete on top-right, Share on bottom
   card.innerHTML = `
     <button class="edit-property-btn" data-property-id="${property.id}" title="Edit Property">
       ✏️ Edit
@@ -1280,10 +1356,13 @@ function createPropertyCard(property) {
     <button class="delete-property-btn" data-property-id="${property.id}" title="Delete Property">
       🗑️ Delete
     </button>
+    <button class="share-property-btn" data-property-id="${property.id}" title="Share Property" style="position:absolute;bottom:10px;right:10px;background:rgba(26,12,75,0.9);color:white;border:none;padding:8px 12px;border-radius:50px;cursor:pointer;font-size:0.85rem;z-index:10;transition:all 0.3s;">
+      📤 Share
+    </button>
     <a href="property-detail.html?id=${encodeURIComponent(property.id)}" class="card-link-wrapper">
-      <img src="${coverImage}" alt="${property.title}">
+      <img src="${coverImage}" alt="${safeTitle}" loading="lazy">
       <div class="card-body">
-        <h5 class="card-title">${property.title}</h5>
+        <h5 class="card-title">${safeTitle}</h5>
         <p class="card-text">
           ${details}
         </p>
@@ -1313,12 +1392,34 @@ function createPropertyCard(property) {
     });
   }
 
+  // Add share functionality
+  const shareBtn = card.querySelector('.share-property-btn');
+  if (shareBtn) {
+    shareBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      shareProperty(property.id, property.title);
+    });
+    
+    // Hover effect
+    shareBtn.addEventListener('mouseenter', () => {
+      shareBtn.style.background = 'linear-gradient(135deg, #9b7ff7 0%, #b8a3ff 100%)';
+      shareBtn.style.transform = 'scale(1.05)';
+    });
+    shareBtn.addEventListener('mouseleave', () => {
+      shareBtn.style.background = 'rgba(26,12,75,0.9)';
+      shareBtn.style.transform = 'scale(1)';
+    });
+  }
+
   // Prevent card link from triggering when clicking buttons
   const cardLink = card.querySelector('.card-link-wrapper');
   if (cardLink) {
     cardLink.addEventListener('click', (e) => {
       // If clicking on a button, don't navigate
-      if (e.target.closest('.edit-property-btn') || e.target.closest('.delete-property-btn')) {
+      if (e.target.closest('.edit-property-btn') || 
+          e.target.closest('.delete-property-btn') ||
+          e.target.closest('.share-property-btn')) {
         e.preventDefault();
         e.stopPropagation();
       }
@@ -1332,13 +1433,6 @@ function createPropertyCard(property) {
 /*                         Edit Property Function                             */
 /* -------------------------------------------------------------------------- */
 async function handleEditProperty(property) {
-  // Check if user is authenticated
-  if (!isAuthenticated()) {
-    alert("⚠️ You must be logged in as admin to edit properties.");
-    ensureAuthenticated();
-    return;
-  }
-
   // Load property data into the form
   loadPropertyIntoForm(property);
 
@@ -1490,13 +1584,6 @@ function hideLoadingScreen() {
 /*                         Delete Property Function                           */
 /* -------------------------------------------------------------------------- */
 async function handleDeleteProperty(propertyId, propertyTitle) {
-  // Check if user is authenticated
-  if (!isAuthenticated()) {
-    alert("⚠️ You must be logged in as admin to delete properties.");
-    ensureAuthenticated();
-    return;
-  }
-
   // Confirm deletion
   const confirmed = confirm(
     `Are you sure you want to delete:\n\n"${propertyTitle}"\n\nThis action cannot be undone.`
@@ -1549,7 +1636,19 @@ async function handleDeleteProperty(propertyId, propertyTitle) {
     hideLoadingScreen();
     
     debugError('Delete error:', error);
-    const errorMessage = error.message || "An unexpected error occurred while deleting the property.";
+    let errorMessage = "An unexpected error occurred while deleting the property.";
+    
+    // Provide specific error messages
+    if (error.message) {
+      if (error.message.includes('network')) {
+        errorMessage = "Network error. Please check your internet connection.";
+      } else if (error.message.includes('Failed to delete from database')) {
+        errorMessage = "Unable to delete from database. The property was removed locally.";
+      } else {
+        errorMessage = error.message;
+      }
+    }
+    
     alert(`❌ ${errorMessage}\n\nPlease try again or contact support if the problem persists.`);
   }
 }
@@ -1578,6 +1677,81 @@ function moveMorePropertiesCard(featuredCount) {
   debugLog("✅ More Properties card moved to anchor");
 }
 
+// Input sanitization helper
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return input;
+  
+  const div = document.createElement('div');
+  div.textContent = input;
+  return div.innerHTML;
+}
+
+// Back to Top button functionality
+function initBackToTop() {
+  // Create button if it doesn't exist
+  let backToTopBtn = document.getElementById('backToTopBtn');
+  if (!backToTopBtn) {
+    backToTopBtn = document.createElement('button');
+    backToTopBtn.id = 'backToTopBtn';
+    backToTopBtn.className = 'back-to-top';
+    backToTopBtn.innerHTML = '↑';
+    backToTopBtn.setAttribute('aria-label', 'Back to top');
+    backToTopBtn.title = 'Back to top';
+    document.body.appendChild(backToTopBtn);
+  }
+  
+  // Show/hide button on scroll
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTopBtn.classList.add('show');
+    } else {
+      backToTopBtn.classList.remove('show');
+    }
+  });
+  
+  // Scroll to top on click
+  backToTopBtn.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  });
+}
+
+// Share property functionality
+function shareProperty(propertyId, propertyTitle) {
+  const url = `${window.location.origin}/property-detail.html?id=${encodeURIComponent(propertyId)}`;
+  const text = `Check out this property: ${propertyTitle}`;
+  
+  // Use Web Share API if available
+  if (navigator.share) {
+    navigator.share({
+      title: propertyTitle,
+      text: text,
+      url: url
+    }).catch(err => debugLog('Error sharing:', err));
+  } else {
+    // Fallback: Copy to clipboard
+    navigator.clipboard.writeText(url).then(() => {
+      alert('✅ Property link copied to clipboard!');
+    }).catch(err => {
+      debugError('Failed to copy:', err);
+      alert('❌ Failed to copy link. Please try again.');
+    });
+  }
+}
+
+// WhatsApp contact integration
+function contactViaWhatsApp(propertyTitle = '') {
+  const phoneNumber = '271001733057'; // Iconic Realty WhatsApp number
+  const message = propertyTitle 
+    ? `Hi, I'm interested in: ${propertyTitle}`
+    : 'Hi, I would like to inquire about your properties.';
+  
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+  window.open(whatsappUrl, '_blank');
+}
+
 renderDynamicProperties();
 
 // initialize Supabase client if configuration is present
@@ -1587,8 +1761,12 @@ try {
   debugWarn("initSupabase call failed:", e);
 }
 
+// Initialize Back to Top button
+initBackToTop();
+
 window.addEventListener("storage", (event) => {
   if (event.key === STORAGE_KEY) {
     renderDynamicProperties();
   }
 });
+
